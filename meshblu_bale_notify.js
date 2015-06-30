@@ -2,6 +2,8 @@ var noble = require('noble');
 var meshblu = require('meshblu');
 var config = require('./meshblu.json');
 
+var baleCount;
+
 
 var conn = meshblu.createConnection({
   server : config.server,
@@ -10,17 +12,36 @@ var conn = meshblu.createConnection({
   token  : config.token
 });
 
+
+// only scan for devices advertising these service UUID's (default or empty array => any peripherals
+var serviceUuids = ['b1a6752152eb4d36e13e357d7c225466'];
+
+// allow duplicate peripheral to be returned (default false) on discovery event
+var allowDuplicates = false;
+
+
 conn.on('ready', function(){
 
-  // only scan for devices advertising these service UUID's (default or empty array => any peripherals
-  var serviceUuids = ['b1a6752152eb4d36e13e357d7c225466'];
+  console.log("ALIVE!");
 
-  // allow duplicate peripheral to be returned (default false) on discovery event
-  var allowDuplicates = false;
+  setInterval(function() {
+
+    conn.message({
+      "devices": "*",
+      "payload": {"baleCount" : baleCount}
+    });
+
+  }, 5000);
+
+
+
+
+}); // end meshblu On ready
+
 
   noble.on('stateChange', function(state) {
     if (state === 'poweredOn') {
-      noble.startScanning(serviceUuids, allowDuplicates);
+      noble.startScanning(['b1a6752152eb4d36e13e357d7c225466'], false);
     } else {
       noble.stopScanning();
     }
@@ -41,10 +62,7 @@ conn.on('ready', function(){
 
           baleLevelCharacteristic.on('read', function(data, isNotification) {
             console.log('bale count is: ', data.toString() );
-            conn.message({
-              "devices": "*",
-              "payload": {"baleCount" : data.toString()}
-            });
+            baleCount = data.toString();
           });
 
           // true to enable notify
@@ -55,5 +73,3 @@ conn.on('ready', function(){
       });
     });
   });
-
-}); // end meshblu On ready
