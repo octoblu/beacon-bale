@@ -9,6 +9,7 @@
   "author": "virgilvox <moheeb.zara@citrix.com> (http://app.octoblu.com/)",
   "license": "ISC",
   "dependencies": {
-    "bleno": "^0.2.0"
+    "bleno": "^0.2.0",
+    "noble": "*"
   }
 }
