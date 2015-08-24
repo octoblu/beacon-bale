@@ -10,6 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "bleno": "^0.2.0",
-    "noble": "*"
+    "johnny-five": "^0.8.87",
+    "meshblu": "^1.30.1",
+    "meshblu-util": "^1.11.1",
+    "noble": "^1.1.0"
   }
 }
